@@ -1,6 +1,6 @@
-export const ADD_EMAIL = 'ADD_EMAIL';
+export const SEND_TOKEN = 'SEND_TOKEN';
 
-export const addEmail = (email) => ({
-  type: ADD_EMAIL,
-  email,
+export const sendToken = (payload) => ({
+  type: SEND_TOKEN,
+  payload,
 });
