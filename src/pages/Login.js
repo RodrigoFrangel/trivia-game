@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { sendToken } from '../redux/actions';
+// import { connect } from 'react-redux';
+// import { sendToken } from '../redux/actions';
 
 class Login extends React.Component {
   state = {
@@ -27,31 +27,13 @@ class Login extends React.Component {
     }
   }
 
-  fetchApiToken = () => {
-    // const { setToken } = this.props;
-    const url = 'https://opentdb.com/api_token.php?command=request';
-
-    const token = fetch(url)
-      .then((response) => response.json())
-      .then((data) => data.token);
-    return token;
-    // return setToken(token);
-  }
-
-  saveLocalStorage = () => {
-    const { getToken } = this.props;
-    localStorage.setItem('token', getToken);
-  }
-
   handleClick = async () => {
     const { history } = this.props;
-    await fetchApiToken();
-    saveLocalStorage();
+    const tokenAPI = await fetch('https://opentdb.com/api_token.php?command=request');
+    const userToken = await tokenAPI.json();
+    const { token } = userToken;
+    localStorage.setItem('token', token);
     history.push('/trivia');
-  }
-
-  componentDidMount = () => {
-    fetchApiToken();
   }
 
   render() {
@@ -90,20 +72,19 @@ class Login extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  getToken: state.token,
-});
+// const mapStateToProps = (state) => ({
+//   getToken: state.token,
+// });
 
-const mapDispatchToProps = (dispatch) => ({
-  setToken: (token) => dispatch(sendToken(token)),
-});
+// const mapDispatchToProps = (dispatch) => ({
+//   setToken: (token) => dispatch(sendToken(token)),
+// });
 
 Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
-  getToken: PropTypes.func.isRequired,
-  // setToken: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+// export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;
