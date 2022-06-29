@@ -6,8 +6,8 @@ class Question extends React.Component {
     const { question, allAnswers, category, nextQuestion, correctAnswer } = this.props;
     return (
       <>
-        <h3 data-testid="question-text">{category}</h3>
-        <p data-testid="question-category">{question}</p>
+        <p data-testid="question-category">{category}</p>
+        <p data-testid="question-text">{question}</p>
         <div data-testid="answer-options">
           {allAnswers.map((answear, index) => (
             answear !== correctAnswer
