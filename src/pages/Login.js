@@ -36,6 +36,11 @@ class Login extends React.Component {
     history.push('/trivia');
   }
 
+  handleClickSettings = async () => {
+    const { history } = this.props;
+    history.push('/settings');
+  }
+
   render() {
     const { isEnabled, inputEmail, inputName } = this.state;
 
@@ -66,6 +71,13 @@ class Login extends React.Component {
           disabled={ !isEnabled }
         >
           Play
+        </button>
+        <button
+          data-testid="btn-settings"
+          type="button"
+          onClick={ this.handleClickSettings }
+        >
+          Configurações
         </button>
       </div>
     );
