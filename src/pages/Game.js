@@ -6,8 +6,6 @@ import Question from '../components/Question';
 
 class Game extends React.Component {
   state = {
-    token: '',
-    questionsObj: {},
     questionIndex: 0,
     allQuestions: [],
     category: '',
@@ -23,36 +21,30 @@ class Game extends React.Component {
     return gravatar;
   };
 
-  getToken = () => {
-    const token = localStorage.getItem('token');
-    this.setState({ token });
-  };
+    fetchApiQuestions = async () => {
+      const token = localStorage.getItem('token');
+      const quantQuestoes = 5;
+      const questionsAPI = await fetch(
+        `https://opentdb.com/api.php?amount=${quantQuestoes}&token=${token}`,
+      );
+      const questionsObj = await questionsAPI.json();
+      return this.setResponseApiState(questionsObj);
+    };
 
-  fetchApiQuestions = async () => {
-    const { token } = this.state;
-    const quantQuestoes = 5;
-    const questionsAPI = await fetch(
-      `https://opentdb.com/api.php?amount=${quantQuestoes}&token=${token}`,
-    );
-    const questionsObj = await questionsAPI.json();
-    return this.setState({ questionsObj });
-  };
-
-  setResponseApiState = () => {
-    const { questionsObj } = this.state;
+  setResponseApiState = (param) => {
     const { history } = this.props;
-    if (questionsObj.results.length === 0) {
+    if (param.results.length === 0) {
       localStorage.setItem('token', '');
       history.push('/');
     } else {
       this.setState({
         questionIndex: 0,
-        allQuestions: questionsObj.results,
-        category: questionsObj.results[0].category,
-        question: questionsObj.results[0].question,
-        correctAnswer: questionsObj.results[0].correct_answer,
-        allAnswers: questionsObj.results[0]
-          .incorrect_answers.concat(questionsObj.results[0].correct_answer) });
+        allQuestions: param.results,
+        category: param.results[0].category,
+        question: param.results[0].question,
+        correctAnswer: param.results[0].correct_answer,
+        allAnswers: param.results[0]
+          .incorrect_answers.concat(param.results[0].correct_answer) });
     }
   }
 
@@ -80,9 +72,7 @@ class Game extends React.Component {
   }
 
   componentDidMount = async () => {
-    this.getToken();
     await this.fetchApiQuestions();
-    this.setResponseApiState();
   };
 
   render() {
