@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
-// import { sendToken } from '../redux/actions';
+import { connect } from 'react-redux';
+import { sendEmail, sendName } from '../redux/actions';
 
 class Login extends React.Component {
   state = {
@@ -28,12 +28,15 @@ class Login extends React.Component {
   }
 
   handleClick = async () => {
-    const { history } = this.props;
+    const { inputEmail, inputName } = this.state;
+    const { history, setEmail, setName } = this.props;
     const tokenAPI = await fetch('https://opentdb.com/api_token.php?command=request');
     const userToken = await tokenAPI.json();
     const { token } = userToken;
     localStorage.setItem('token', token);
-    history.push('/trivia');
+    setEmail(inputEmail);
+    setName(inputName);
+    history.push('/game');
   }
 
   handleClickSettings = async () => {
@@ -88,15 +91,18 @@ class Login extends React.Component {
 //   getToken: state.token,
 // });
 
-// const mapDispatchToProps = (dispatch) => ({
-//   setToken: (token) => dispatch(sendToken(token)),
-// });
+const mapDispatchToProps = (dispatch) => ({
+  setEmail: (email) => dispatch(sendEmail(email)),
+  setName: (name) => dispatch(sendName(name)),
+});
 
 Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  setEmail: PropTypes.func.isRequired,
+  setName: PropTypes.func.isRequired,
 };
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Login);
-export default Login;
+export default connect(null, mapDispatchToProps)(Login);
+// export default Login;
