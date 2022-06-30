@@ -7,9 +7,10 @@ class Question extends React.Component {
       question,
       allAnswer,
       category,
-      nextQuestion,
+      // questionNext,
       correctAnswer,
       isChecked,
+      waitQuestion,
     } = this.props;
     return (
       <>
@@ -23,8 +24,10 @@ class Question extends React.Component {
                   className={ isChecked ? 'wrong-answer' : '' }
                   key={ answear }
                   type="button"
-                  onClick={ nextQuestion }
+                  name="wrong"
+                  onClick={ waitQuestion }
                   data-testid={ `wrong-answer-${index}` }
+                  disabled={ isChecked }
                 >
                   {answear}
                 </button>
@@ -32,10 +35,12 @@ class Question extends React.Component {
               : (
                 <button
                   className={ isChecked ? 'correct-answer' : '' }
+                  name="correct"
                   key={ answear }
                   type="button"
-                  onClick={ nextQuestion }
+                  onClick={ waitQuestion }
                   data-testid="correct-answer"
+                  disabled={ isChecked }
                 >
                   {answear}
                 </button>
@@ -52,7 +57,8 @@ Question.propTypes = {
   category: PropTypes.string.isRequired,
   correctAnswer: PropTypes.string.isRequired,
   allAnswer: PropTypes.instanceOf(Array).isRequired,
-  nextQuestion: PropTypes.func.isRequired,
+  // questionNext: PropTypes.func.isRequired,
+  waitQuestion: PropTypes.func.isRequired,
   isChecked: PropTypes.bool.isRequired,
 };
 

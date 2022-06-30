@@ -3,6 +3,7 @@ import md5 from 'crypto-js/md5';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Question from '../components/Question';
+import { sendScore } from '../redux/actions';
 
 class Game extends React.Component {
   state = {
@@ -13,7 +14,32 @@ class Game extends React.Component {
     correctAnswer: '',
     allAnswer: [],
     isChecked: false,
+    currentTimer: 30,
+    difficulty: '',
   };
+
+  componentDidMount = async () => {
+    this.updateCurrentTimer();
+    await this.fetchApiQuestions();
+  }
+
+  componentDidUpdate = async () => {
+    const endCounter = 0;
+    const { currentTimer } = this.state;
+    if (currentTimer === endCounter) {
+      this.clearCount();
+    }
+    // this.waitQuestion();
+  }
+
+  updateCurrentTimer = () => {
+    const oneSeconds = 1000;
+    this.idTimer = setInterval(() => {
+      this.setState((prevState) => ({
+        currentTimer: prevState.currentTimer - 1,
+      }));
+    }, oneSeconds);
+  }
 
   hashEmail = () => {
     const { getEmail } = this.props;
@@ -22,19 +48,21 @@ class Game extends React.Component {
     return gravatar;
   };
 
-    fetchApiQuestions = async () => {
-      const token = localStorage.getItem('token');
-      const quantQuestoes = 5;
-      const questionsAPI = await fetch(
-        `https://opentdb.com/api.php?amount=${quantQuestoes}&token=${token}`,
-      );
-      const questionsObj = await questionsAPI.json();
-      return this.setResponseApiState(questionsObj);
-    };
+  fetchApiQuestions = async () => {
+    const token = localStorage.getItem('token');
+    const quantQuestoes = 5;
+    const questionsAPI = await fetch(
+      `https://opentdb.com/api.php?amount=${quantQuestoes}&token=${token}`,
+    );
+    const questionsObj = await questionsAPI.json();
+    return this.setResponseApiState(questionsObj);
+  };
 
   setResponseApiState = (param) => {
+    const randNumber = 0.5;
+    const RESPONSE_CODE = 3;
     const { history } = this.props;
-    if (param.results.length === 0) {
+    if (param.results.length === 0 || param.response_code === RESPONSE_CODE) {
       localStorage.setItem('token', '');
       history.push('/');
     } else {
@@ -45,55 +73,74 @@ class Game extends React.Component {
         question: param.results[0].question,
         correctAnswer: param.results[0].correct_answer,
         allAnswer: param.results[0]
-          .incorrect_answers.concat(param.results[0].correct_answer) });
+          .incorrect_answers.concat(param.results[0].correct_answer)
+          .sort(() => Math.random() - randNumber),
+      });
     }
   }
 
   redirectPages = () => {
     const { history } = this.props;
     history.push('/'); // MUDAR PARA A ROTA CORRETA
-  }
+  };
 
-  rightWrongColor = () => {
-    this.setState({ isChecked: true });
-    const seconds = 500;
-    setTimeout(this.questionNext, seconds);
-  }
+  clearCount = () => {
+    clearInterval(this.idTimer);
+    this.setState({ currentTimer: 30, isChecked: true });
+  };
 
-  questionNext = () => {
+  waitQuestion = (event) => {
+    const { correctAnswer } = this.state;
+    const { name } = event.target;
+    if (name === correctAnswer) {
+      this.clearCount();
+      this.scorePlayer();
+    } else if (name !== correctAnswer) {
+      this.clearCount();
+    }
+  };
+
+  questionNext = (event) => {
     const { questionIndex, allQuestions } = this.state;
     const nextIndex = questionIndex + 1;
     const lastElement = allQuestions.length === nextIndex;
+    this.waitQuestion(event);
     if (lastElement) {
       this.redirectPages();
     } else {
-      this.rightWrongColor();
       this.setState({
         questionIndex: nextIndex,
         category: allQuestions[nextIndex].category,
         question: allQuestions[nextIndex].question,
         correctAnswer: allQuestions[nextIndex].correct_answer,
-        allAnswer: allQuestions[nextIndex]
-          .incorrect_answers.concat(allQuestions[nextIndex].correct_answer),
+        allAnswer: allQuestions[nextIndex].incorrect_answers.concat(
+          allQuestions[nextIndex].correct_answer,
+        ),
         isChecked: false,
       });
+      this.updateCurrentTimer();
     }
-  }
+  };
 
-  componentDidMount = async () => {
-    await this.fetchApiQuestions();
+  scorePlayer = () => {
+    const pontuation = { easy: 1, medium: 2, hard: 3 };
+    const defaultNumber = 10;
+    const { setScore, getScore } = this.props;
+    const { currentTimer, difficulty } = this.state;
+    const sum = getScore + (defaultNumber + currentTimer * pontuation[difficulty]);
+    setScore(sum);
   };
 
   render() {
-    const { getName } = this.props;
+    const { getName, getScore } = this.props;
     const {
       category,
       question,
       correctAnswer,
       allAnswer,
       isChecked,
+      currentTimer,
     } = this.state;
-    const randNumber = 0.5;
     return (
       <>
         <header>
@@ -103,19 +150,31 @@ class Game extends React.Component {
             alt={ getName }
           />
           <p data-testid="header-player-name">{getName}</p>
-          <p data-testid="header-score">0.00</p>
+          <p data-testid="header-score">{getScore}</p>
         </header>
         <div>
           <Question
             category={ category }
             question={ question }
             correctAnswer={ correctAnswer }
-            allAnswer={ allAnswer
-              .sort(() => Math.random() - randNumber) }
-            nextQuestion={ this.rightWrongColor }
+            allAnswer={ allAnswer }
+            questionNext={ this.questionNext }
             isChecked={ isChecked }
+            waitQuestion={ this.waitQuestion }
           />
+          <button
+            type="button"
+            data-testid="btn-next"
+            onClick={ this.questionNext }
+          >
+            Next
+          </button>
         </div>
+        <h3>
+          Seu tempo para responder a pergunta acaba em:
+          {' '}
+          {currentTimer}
+        </h3>
       </>
     );
   }
@@ -127,11 +186,18 @@ Game.propTypes = {
   }).isRequired,
   getEmail: PropTypes.string.isRequired,
   getName: PropTypes.string.isRequired,
+  getScore: PropTypes.string.isRequired,
+  setScore: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   getEmail: state.player.gravatarEmail,
   getName: state.player.name,
+  getScore: state.player.score,
 });
 
-export default connect(mapStateToProps)(Game);
+const mapDispatchToProps = (dispatch) => ({
+  setScore: (sum) => dispatch(sendScore(sum)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
