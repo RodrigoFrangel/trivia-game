@@ -35,7 +35,7 @@ class Question extends React.Component {
               : (
                 <button
                   className={ isChecked ? 'correct-answer' : '' }
-                  name="correct"
+                  name={ correctAnswer }
                   key={ answear }
                   type="button"
                   onClick={ waitQuestion }

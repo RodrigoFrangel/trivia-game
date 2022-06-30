@@ -29,7 +29,6 @@ class Game extends React.Component {
     if (currentTimer === endCounter) {
       this.clearCount();
     }
-    // this.waitQuestion();
   }
 
   updateCurrentTimer = () => {
@@ -72,6 +71,7 @@ class Game extends React.Component {
         category: param.results[0].category,
         question: param.results[0].question,
         correctAnswer: param.results[0].correct_answer,
+        difficulty: param.results[0].difficulty,
         allAnswer: param.results[0]
           .incorrect_answers.concat(param.results[0].correct_answer)
           .sort(() => Math.random() - randNumber),
@@ -93,8 +93,8 @@ class Game extends React.Component {
     const { correctAnswer } = this.state;
     const { name } = event.target;
     if (name === correctAnswer) {
-      this.clearCount();
       this.scorePlayer();
+      this.clearCount();
     } else if (name !== correctAnswer) {
       this.clearCount();
     }
@@ -113,6 +113,7 @@ class Game extends React.Component {
         category: allQuestions[nextIndex].category,
         question: allQuestions[nextIndex].question,
         correctAnswer: allQuestions[nextIndex].correct_answer,
+        difficulty: allQuestions[nextIndex].difficulty,
         allAnswer: allQuestions[nextIndex].incorrect_answers.concat(
           allQuestions[nextIndex].correct_answer,
         ),
@@ -123,11 +124,11 @@ class Game extends React.Component {
   };
 
   scorePlayer = () => {
-    const pontuation = { easy: 1, medium: 2, hard: 3 };
-    const defaultNumber = 10;
     const { setScore, getScore } = this.props;
     const { currentTimer, difficulty } = this.state;
-    const sum = getScore + (defaultNumber + currentTimer * pontuation[difficulty]);
+    const defaultNumber = 10;
+    const pontuation = { easy: 1, medium: 2, hard: 3 };
+    const sum = getScore + (defaultNumber + (currentTimer * pontuation[difficulty]));
     setScore(sum);
   };
 
@@ -186,7 +187,7 @@ Game.propTypes = {
   }).isRequired,
   getEmail: PropTypes.string.isRequired,
   getName: PropTypes.string.isRequired,
-  getScore: PropTypes.string.isRequired,
+  getScore: PropTypes.number.isRequired,
   setScore: PropTypes.func.isRequired,
 };
 
