@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Question from '../components/Question';
 import { sendScore } from '../redux/actions';
+import ButtonNext from '../components/ButtonNext';
 
 class Game extends React.Component {
   state = {
@@ -16,6 +17,7 @@ class Game extends React.Component {
     isChecked: false,
     currentTimer: 30,
     difficulty: '',
+    showButton: false,
   };
 
   componentDidMount = async () => {
@@ -81,7 +83,7 @@ class Game extends React.Component {
 
   redirectPages = () => {
     const { history } = this.props;
-    history.push('/'); // MUDAR PARA A ROTA CORRETA
+    history.push('/feedback');
   };
 
   clearCount = () => {
@@ -90,7 +92,7 @@ class Game extends React.Component {
   };
 
   waitQuestion = (event) => {
-    const { correctAnswer } = this.state;
+    const { correctAnswer, showButton } = this.state;
     const { name } = event.target;
     if (name === correctAnswer) {
       this.scorePlayer();
@@ -98,6 +100,9 @@ class Game extends React.Component {
     } else if (name !== correctAnswer) {
       this.clearCount();
     }
+    this.setState({
+      showButton: !showButton,
+    });
   };
 
   questionNext = (event) => {
@@ -132,6 +137,12 @@ class Game extends React.Component {
     setScore(sum);
   };
 
+  disableElement = () => {
+    this.setState({
+      showButton: false,
+    });
+  }
+
   render() {
     const { getName, getScore } = this.props;
     const {
@@ -141,6 +152,7 @@ class Game extends React.Component {
       allAnswer,
       isChecked,
       currentTimer,
+      showButton,
     } = this.state;
     return (
       <>
@@ -162,14 +174,9 @@ class Game extends React.Component {
             questionNext={ this.questionNext }
             isChecked={ isChecked }
             waitQuestion={ this.waitQuestion }
+            ableEl={ this.ableElement }
           />
-          <button
-            type="button"
-            data-testid="btn-next"
-            onClick={ this.questionNext }
-          >
-            Next
-          </button>
+          {showButton && <ButtonNext funcQuest={ this.questionNext } />}
         </div>
         <h3>
           Seu tempo para responder a pergunta acaba em:
