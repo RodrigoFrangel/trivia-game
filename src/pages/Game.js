@@ -56,7 +56,7 @@ class Game extends React.Component {
 
   rightWrongColor = () => {
     this.setState({ isChecked: true });
-    const seconds = 1000;
+    const seconds = 500;
     setTimeout(this.questionNext, seconds);
   }
 
