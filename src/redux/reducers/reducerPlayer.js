@@ -2,8 +2,8 @@ import { SEND_EMAIL, SEND_NAME, SEND_SCORE } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
-  assertions: '',
-  score: '0',
+  assertions: 0,
+  score: 0,
   gravatarEmail: '',
 };
 
