@@ -11,7 +11,8 @@ class Game extends React.Component {
     category: '',
     question: '',
     correctAnswer: '',
-    allAnswers: [],
+    allAnswer: [],
+    isChecked: false,
   };
 
   hashEmail = () => {
@@ -43,14 +44,20 @@ class Game extends React.Component {
         category: param.results[0].category,
         question: param.results[0].question,
         correctAnswer: param.results[0].correct_answer,
-        allAnswers: param.results[0]
+        allAnswer: param.results[0]
           .incorrect_answers.concat(param.results[0].correct_answer) });
     }
   }
 
   redirectPages = () => {
     const { history } = this.props;
-    history.push('/');
+    history.push('/'); // MUDAR PARA A ROTA CORRETA
+  }
+
+  rightWrongColor = () => {
+    this.setState({ isChecked: true });
+    const seconds = 1000;
+    setTimeout(this.questionNext, seconds);
   }
 
   questionNext = () => {
@@ -60,13 +67,15 @@ class Game extends React.Component {
     if (lastElement) {
       this.redirectPages();
     } else {
+      this.rightWrongColor();
       this.setState({
         questionIndex: nextIndex,
         category: allQuestions[nextIndex].category,
         question: allQuestions[nextIndex].question,
         correctAnswer: allQuestions[nextIndex].correct_answer,
-        allAnswers: allQuestions[nextIndex]
+        allAnswer: allQuestions[nextIndex]
           .incorrect_answers.concat(allQuestions[nextIndex].correct_answer),
+        isChecked: false,
       });
     }
   }
@@ -77,7 +86,13 @@ class Game extends React.Component {
 
   render() {
     const { getName } = this.props;
-    const { category, question, correctAnswer, allAnswers } = this.state;
+    const {
+      category,
+      question,
+      correctAnswer,
+      allAnswer,
+      isChecked,
+    } = this.state;
     const randNumber = 0.5;
     return (
       <>
@@ -95,8 +110,10 @@ class Game extends React.Component {
             category={ category }
             question={ question }
             correctAnswer={ correctAnswer }
-            allAnswers={ allAnswers.sort(() => Math.random() - randNumber) }
-            nextQuestion={ this.questionNext }
+            allAnswer={ allAnswer
+              .sort(() => Math.random() - randNumber) }
+            nextQuestion={ this.rightWrongColor }
+            isChecked={ isChecked }
           />
         </div>
       </>

@@ -21,6 +21,13 @@ body {
   border: 1px solid green;
 }
 
+.correct-answer {
+  border: 3px solid rgb(6, 240, 15);
+}
+
+.wrong-answer {
+  border: 3px solid red;
+}
 @media ( prefers-reduced-motion : no-preference ) {
 
   .App-logo {

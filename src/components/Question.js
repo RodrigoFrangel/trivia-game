@@ -3,16 +3,24 @@ import PropTypes from 'prop-types';
 
 class Question extends React.Component {
   render() {
-    const { question, allAnswers, category, nextQuestion, correctAnswer } = this.props;
+    const {
+      question,
+      allAnswer,
+      category,
+      nextQuestion,
+      correctAnswer,
+      isChecked,
+    } = this.props;
     return (
       <>
         <p data-testid="question-category">{category}</p>
         <p data-testid="question-text">{question}</p>
         <div data-testid="answer-options">
-          {allAnswers.map((answear, index) => (
+          {allAnswer.map((answear, index) => (
             answear !== correctAnswer
               ? (
                 <button
+                  className={ isChecked ? 'wrong-answer' : '' }
                   key={ answear }
                   type="button"
                   onClick={ nextQuestion }
@@ -23,6 +31,7 @@ class Question extends React.Component {
               )
               : (
                 <button
+                  className={ isChecked ? 'correct-answer' : '' }
                   key={ answear }
                   type="button"
                   onClick={ nextQuestion }
@@ -42,9 +51,9 @@ Question.propTypes = {
   question: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   correctAnswer: PropTypes.string.isRequired,
-  allAnswers: PropTypes.instanceOf(Array).isRequired,
+  allAnswer: PropTypes.instanceOf(Array).isRequired,
   nextQuestion: PropTypes.func.isRequired,
-
+  isChecked: PropTypes.bool.isRequired,
 };
 
 export default Question;
