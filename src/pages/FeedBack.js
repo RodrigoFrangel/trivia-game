@@ -11,9 +11,14 @@ class Feedback extends Component {
       return gravatar;
     };
 
-    redirectPages = () => {
+    redirectLogin = () => {
       const { history } = this.props;
       history.push('/');
+    };
+
+    redirectRanking = () => {
+      const { history } = this.props;
+      history.push('/ranking');
     };
 
     render() {
@@ -39,11 +44,18 @@ class Feedback extends Component {
               ? <p data-testid="feedback-text">Could be better...</p>
               : <p data-testid="feedback-text">Well Done!</p>}
             <button
-              onClick={ this.redirectPages }
+              onClick={ this.redirectLogin }
               data-testid="btn-play-again"
               type="button"
             >
               Play Again
+            </button>
+            <button
+              onClick={ this.redirectRanking }
+              data-testid="btn-ranking"
+              type="button"
+            >
+              Ranking
             </button>
           </div>
         </>
