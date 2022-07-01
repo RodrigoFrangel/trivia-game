@@ -4,31 +4,6 @@ import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 
 class Feedback extends Component {
-  // state = {
-  //   mensagem: '',
-  // };
-
-  // componentDidMount() {
-  //   this.verifyMensage();
-  // }
-
-  // verifyMensage = () => {
-  //   const { getAssertions } = this.props;
-  //   console.log(getAssertions);
-  //   const assertionsParam = 3;
-  //   if (getAssertions < assertionsParam) {
-  //     console.log('aqui if');
-  //     this.setState({
-  //       mensagem: 'Could be better...',
-  //     });
-  //   } else {
-  //     console.log('aqui else');
-  //     this.setState = ({
-  //       mensagem: 'Well Done!',
-  //     });
-  //   }
-  // }
-
     hashEmail = () => {
       const { getEmail } = this.props;
       const emailConvertido = md5(getEmail).toString();
@@ -36,27 +11,42 @@ class Feedback extends Component {
       return gravatar;
     };
 
+    redirectPages = () => {
+      const { history } = this.props;
+      history.push('/');
+    };
+
     render() {
       const { getName, getScore, getAssertions } = this.props;
-      // const { mensagem } = this.state;
       const assertionsParam = 3;
       return (
-
-        <header>
-          <img
-            data-testid="header-profile-picture"
-            alt="profile-pic"
-            src={ this.hashEmail() }
-          />
-          <div data-testid="header-player-name">
-            { getName }
+        <>
+          <header>
+            <img
+              data-testid="header-profile-picture"
+              alt="profile-pic"
+              src={ this.hashEmail() }
+            />
+            <div data-testid="header-player-name">
+              { getName }
+            </div>
+            <div data-testid="header-score">{getScore}</div>
+          </header>
+          <div>
+            <p data-testid="feedback-total-question">{ getAssertions }</p>
+            <p data-testid="feedback-total-score">{getScore}</p>
+            {getAssertions < assertionsParam
+              ? <p data-testid="feedback-text">Could be better...</p>
+              : <p data-testid="feedback-text">Well Done!</p>}
+            <button
+              onClick={ this.redirectPages }
+              data-testid="btn-play-again"
+              type="button"
+            >
+              Play Again
+            </button>
           </div>
-          <div data-testid="header-score">{getScore}</div>
-          {getAssertions < assertionsParam
-            ? <p data-testid="feedback-text">Could be better...</p>
-            : <p data-testid="feedback-text">Well Done!</p>}
-        </header>
-
+        </>
       );
     }
 }
@@ -73,6 +63,9 @@ Feedback.propTypes = {
   getName: PropTypes.string.isRequired,
   getScore: PropTypes.number.isRequired,
   getAssertions: PropTypes.number.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default connect(mapStateToProps)(Feedback);
