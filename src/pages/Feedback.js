@@ -28,7 +28,8 @@ class Feedback extends Component {
   };
 
   goToRanking = () => {
-    const { history } = this.props;
+    const { history, reset } = this.props;
+    reset();
     history.push('/ranking');
   };
 
