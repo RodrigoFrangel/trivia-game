@@ -3,7 +3,7 @@ import md5 from 'crypto-js/md5';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Question from '../components/Question';
-import { sendScore } from '../redux/actions';
+import { sendQuestions, sendScore } from '../redux/actions';
 import ButtonNext from '../components/ButtonNext';
 
 class Game extends React.Component {
@@ -93,10 +93,12 @@ class Game extends React.Component {
 
   waitQuestion = (event) => {
     const { correctAnswer, showButton } = this.state;
+    const { setQuestions, getAssertions } = this.props;
     const { name } = event.target;
     if (name === correctAnswer) {
       this.scorePlayer();
       this.clearCount();
+      setQuestions(getAssertions);
     } else if (name !== correctAnswer) {
       this.clearCount();
     }
@@ -195,6 +197,8 @@ Game.propTypes = {
   getEmail: PropTypes.string.isRequired,
   getName: PropTypes.string.isRequired,
   getScore: PropTypes.number.isRequired,
+  getAssertions: PropTypes.number.isRequired,
+  setQuestions: PropTypes.func.isRequired,
   setScore: PropTypes.func.isRequired,
 };
 
@@ -202,10 +206,12 @@ const mapStateToProps = (state) => ({
   getEmail: state.player.gravatarEmail,
   getName: state.player.name,
   getScore: state.player.score,
+  getAssertions: state.player.assertions,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setScore: (sum) => dispatch(sendScore(sum)),
+  setQuestions: (questions) => dispatch(sendQuestions(questions)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);
