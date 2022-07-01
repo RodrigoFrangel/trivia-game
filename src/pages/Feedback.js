@@ -55,10 +55,11 @@ class Feedback extends Component {
     const assertionsParam = 3;
 
     return (
-      <div>
-        <header>
+      <div className="feedback-page">
+        <header className="player-header">
           <img
             data-testid="header-profile-picture"
+            className="profile-picture"
             alt="profile-pic"
             src={ gravatarUrl }
           />
@@ -68,7 +69,7 @@ class Feedback extends Component {
           <div data-testid="header-score">{getScore}</div>
         </header>
         <div>
-          <p data-testid="feedback-total-question">{ getAssertions }</p>
+          <p data-testid="feedback-total-question">{getAssertions}</p>
           <p data-testid="feedback-total-score">{getScore}</p>
           {getAssertions < assertionsParam
             ? <p data-testid="feedback-text">Could be better...</p>
