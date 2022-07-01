@@ -2,65 +2,94 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
+import { resetAssertionsScore } from '../redux/actions';
 
 class Feedback extends Component {
-    hashEmail = () => {
-      const { getEmail } = this.props;
-      const emailConvertido = md5(getEmail).toString();
-      const gravatar = `https://www.gravatar.com/avatar/${emailConvertido}`;
-      return gravatar;
-    };
+  state = {
+    gravatarUrl: '',
+  }
 
-    redirectLogin = () => {
-      const { history } = this.props;
-      history.push('/');
-    };
+  componentDidMount = () => {
+    this.hashEmail();
+  }
 
-    redirectRanking = () => {
-      const { history } = this.props;
-      history.push('/ranking');
-    };
+  hashEmail = () => {
+    const { getEmail } = this.props;
+    const emailConvertido = md5(getEmail).toString();
+    const gravatar = `https://www.gravatar.com/avatar/${emailConvertido}`;
+    this.setState({ gravatarUrl: gravatar },
+      () => this.saveDataLocalStorage());
+  }
 
-    render() {
-      const { getName, getScore, getAssertions } = this.props;
-      const assertionsParam = 3;
-      return (
-        <>
-          <header>
-            <img
-              data-testid="header-profile-picture"
-              alt="profile-pic"
-              src={ this.hashEmail() }
-            />
-            <div data-testid="header-player-name">
-              { getName }
-            </div>
-            <div data-testid="header-score">{getScore}</div>
-          </header>
-          <div>
-            <p data-testid="feedback-total-question">{ getAssertions }</p>
-            <p data-testid="feedback-total-score">{getScore}</p>
-            {getAssertions < assertionsParam
-              ? <p data-testid="feedback-text">Could be better...</p>
-              : <p data-testid="feedback-text">Well Done!</p>}
-            <button
-              onClick={ this.redirectLogin }
-              data-testid="btn-play-again"
-              type="button"
-            >
-              Play Again
-            </button>
-            <button
-              onClick={ this.redirectRanking }
-              data-testid="btn-ranking"
-              type="button"
-            >
-              Ranking
-            </button>
-          </div>
-        </>
-      );
+  redirectLogin = () => {
+    const { history, reset } = this.props;
+    reset();
+    history.push('/');
+  };
+
+  redirectRanking = () => {
+    const { history } = this.props;
+    history.push('/ranking');
+  };
+
+  saveDataLocalStorage = () => {
+    const { getName, getScore } = this.props;
+    const { gravatarUrl } = this.state;
+    const newObj = {
+      gravatar: gravatarUrl,
+      name: getName,
+      score: getScore,
+    };
+    const playersLS = JSON.parse(localStorage.getItem('players'));
+    if (playersLS) {
+      playersLS.push(newObj);
+      localStorage.setItem('players', JSON.stringify(playersLS));
+    } else {
+      localStorage.setItem('players', JSON.stringify([newObj]));
     }
+  };
+
+  render() {
+    const { gravatarUrl } = this.state;
+    const { getName, getScore, getAssertions } = this.props;
+    const assertionsParam = 3;
+    return (
+      <>
+        <header>
+          <img
+            data-testid="header-profile-picture"
+            alt="profile-pic"
+            src={ gravatarUrl }
+          />
+          <div data-testid="header-player-name">
+            { getName }
+          </div>
+          <div data-testid="header-score">{getScore}</div>
+        </header>
+        <div>
+          <p data-testid="feedback-total-question">{ getAssertions }</p>
+          <p data-testid="feedback-total-score">{getScore}</p>
+          {getAssertions < assertionsParam
+            ? <p data-testid="feedback-text">Could be better...</p>
+            : <p data-testid="feedback-text">Well Done!</p>}
+          <button
+            onClick={ this.redirectLogin }
+            data-testid="btn-play-again"
+            type="button"
+          >
+            Play Again
+          </button>
+          <button
+            onClick={ this.redirectRanking }
+            data-testid="btn-ranking"
+            type="button"
+          >
+            Ranking
+          </button>
+        </div>
+      </>
+    );
+  }
 }
 
 const mapStateToProps = (state) => ({
@@ -68,6 +97,10 @@ const mapStateToProps = (state) => ({
   getName: state.player.name,
   getScore: state.player.score,
   getAssertions: state.player.assertions,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  reset: () => dispatch(resetAssertionsScore()),
 });
 
 Feedback.propTypes = {
@@ -78,6 +111,7 @@ Feedback.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  reset: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(Feedback);
+export default connect(mapStateToProps, mapDispatchToProps)(Feedback);
