@@ -12,10 +12,10 @@ class Login extends React.Component {
 
   handleChange = ({ target }) => {
     const { name, value } = target;
-    this.setState({ [name]: value }, this.habilitaBotao);
+    this.setState({ [name]: value }, this.enableButton);
   }
 
-  habilitaBotao = () => {
+  enableButton = () => {
     const { inputName, inputEmail } = this.state;
     const minCharacters = 1;
     const regex = /\S+@\S+\.\S+/;
@@ -27,7 +27,7 @@ class Login extends React.Component {
     }
   }
 
-  handleClick = async () => {
+  startGame = async () => {
     const { inputEmail, inputName } = this.state;
     const { history, setEmail, setName } = this.props;
     const tokenAPI = await fetch('https://opentdb.com/api_token.php?command=request');
@@ -39,46 +39,50 @@ class Login extends React.Component {
     history.push('/game');
   }
 
-  handleClickSettings = () => {
+  goToSettings = () => {
     const { history } = this.props;
     history.push('/settings');
   }
 
   render() {
-    const { isEnabled, inputEmail, inputName } = this.state;
+    const { inputEmail, inputName, isEnabled } = this.state;
 
     return (
-      <div>
-        <h1>Email</h1>
+      <div className="login-container">
+        <h3 className="input-title">Email</h3>
         <input
-          name="inputEmail"
-          data-testid="input-gravatar-email"
           type="email"
+          data-testid="input-gravatar-email"
+          className="login-input"
+          name="inputEmail"
           placeholder="exemplo@hotmail.com"
           onChange={ this.handleChange }
           value={ inputEmail }
         />
-        <h2>Nome</h2>
+        <h3 className="input-title">Nome</h3>
         <input
-          name="inputName"
-          data-testid="input-player-name"
           type="text"
-          placeholder="Seu nome"
+          data-testid="input-player-name"
+          className="login-input"
+          name="inputName"
+          placeholder="Digite seu nome"
           onChange={ this.handleChange }
           value={ inputName }
         />
         <button
-          data-testid="btn-play"
           type="button"
-          onClick={ this.handleClick }
+          data-testid="btn-play"
+          className="login-button"
+          onClick={ this.startGame }
           disabled={ !isEnabled }
         >
           Play
         </button>
         <button
-          data-testid="btn-settings"
           type="button"
-          onClick={ this.handleClickSettings }
+          data-testid="btn-settings"
+          className="login-button"
+          onClick={ this.goToSettings }
         >
           Configurações
         </button>

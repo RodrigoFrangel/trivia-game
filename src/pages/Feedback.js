@@ -10,24 +10,24 @@ class Feedback extends Component {
   }
 
   componentDidMount = () => {
-    this.hashEmail();
+    this.playerGravatar();
   }
 
-  hashEmail = () => {
+  playerGravatar = () => {
     const { getEmail } = this.props;
-    const emailConvertido = md5(getEmail).toString();
-    const gravatar = `https://www.gravatar.com/avatar/${emailConvertido}`;
+    const convertedEmail = md5(getEmail).toString();
+    const gravatar = `https://www.gravatar.com/avatar/${convertedEmail}`;
     this.setState({ gravatarUrl: gravatar },
       () => this.saveDataLocalStorage());
   }
 
-  redirectLogin = () => {
+  goToLogin = () => {
     const { history, reset } = this.props;
     reset();
     history.push('/');
   };
 
-  redirectRanking = () => {
+  goToRanking = () => {
     const { history } = this.props;
     history.push('/ranking');
   };
@@ -53,8 +53,9 @@ class Feedback extends Component {
     const { gravatarUrl } = this.state;
     const { getName, getScore, getAssertions } = this.props;
     const assertionsParam = 3;
+
     return (
-      <>
+      <div>
         <header>
           <img
             data-testid="header-profile-picture"
@@ -73,21 +74,21 @@ class Feedback extends Component {
             ? <p data-testid="feedback-text">Could be better...</p>
             : <p data-testid="feedback-text">Well Done!</p>}
           <button
-            onClick={ this.redirectLogin }
+            onClick={ this.goToLogin }
             data-testid="btn-play-again"
             type="button"
           >
             Play Again
           </button>
           <button
-            onClick={ this.redirectRanking }
+            onClick={ this.goToRanking }
             data-testid="btn-ranking"
             type="button"
           >
             Ranking
           </button>
         </div>
-      </>
+      </div>
     );
   }
 }

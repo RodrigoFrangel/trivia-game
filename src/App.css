@@ -41,6 +41,9 @@
 
 body {
   box-sizing: border-box;
+
+  /* font-family: Indie Flower , cursive; */
+  font-family: Varela Round , sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -54,18 +57,140 @@ body {
   pointer-events: none;
 }
 
-.red-border {
+/* .red-border {
   border: 1px solid red;
 }
 
 .green-border {
   border: 1px solid green;
+} */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 30%;
+}
+
+.input-title {
+  margin: 0 0 5px;
+  text-align: left;
+}
+
+.login-input {
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  padding: 15px;
+  width: 100%;
+}
+
+.login-button {
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-family: Varela Round , sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  padding: 15px;
+  width: 100%;
+}
+
+.player-header {
+  align-items: center;
+  background-color: rgb(47, 80, 168);
+  border-radius: 5px;
+  box-sizing: border-box;
+  display: flex;
+  height: 50px;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  padding: 0 10px 0 0;
+  width: 100%;
+}
+
+.trivia-container {
+  padding: 10px;
+  width: 40%;
+}
+
+.profile-picture {
+  border-radius: 5px;
+  height: 50px;
+  width: 50px;
+}
+
+/* .question-container {
+
+  border: blue solid;
+} */
+
+.question-category {
+  background-color: rgb(207, 207, 207);
+  border-radius: 3px 3px 0 0;
+  color: black;
+  margin: 0;
+  padding: 10px;
+}
+
+.trivia-question {
+  display: flex;
+  width: 100%;
+}
+
+.question-text {
+  background-color: rgba(255, 255, 255, 0.096);
+  border-radius: 0 0 5px 5px;
+  box-sizing: border-box;
+  height: 72.5%;
+  margin: 0;
+  padding: 20px;
+}
+
+.answer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 8px;
+  width: 100%;
+}
+
+.trivia-question button {
+  border-radius: 8px;
+  color: black;
+  font-family: Varela Round , sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 7px;
+  padding: 7px;
+}
+
+.correct-answer, .wrong-answer {
+  background-color: rgb(83, 207, 0);
+  border-radius: 8px;
+  color: black;
+  font-family: Varela Round , sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 7px;
 }
 
 .correct-answer {
+  background-color: rgb(83, 207, 0);
   border: 3px solid rgb(6, 240, 15);
 }
 
 .wrong-answer {
+  background-color: rgb(223, 49, 49);
   border: 3px solid red;
+}
+
+.button-next {
+  border-radius: 5px;
+  font-family: Varela Round , sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 10px;
+  padding: 10px;
+  width: 200px;
 }

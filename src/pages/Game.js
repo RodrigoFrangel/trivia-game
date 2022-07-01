@@ -8,57 +8,39 @@ import ButtonNext from '../components/ButtonNext';
 
 class Game extends React.Component {
   state = {
-    questionIndex: 0,
-    allQuestions: [],
+    currentQuestion: 0,
     category: '',
     question: '',
     correctAnswer: '',
-    allAnswer: [],
-    isChecked: false,
-    currentTimer: 30,
+    timer: 30,
     difficulty: '',
-    showButton: false,
+    allQuestions: [],
+    allAnswers: [],
+    isEnabled: false,
+    isBtnNextShowing: false,
   };
 
   componentDidMount = async () => {
-    this.updateCurrentTimer();
-    await this.fetchApiQuestions();
+    this.updateTimer();
+    await this.fetchQuestionsFromAPI();
   }
 
   componentDidUpdate = async () => {
-    const endCounter = 0;
-    const { currentTimer } = this.state;
-    if (currentTimer === endCounter) {
-      this.clearCount();
+    const timesUp = 0;
+    const { timer } = this.state;
+    if (timer === timesUp) {
+      this.resetTimer();
     }
   }
 
-  updateCurrentTimer = () => {
-    const oneSeconds = 1000;
-    this.idTimer = setInterval(() => {
-      this.setState((prevState) => ({
-        currentTimer: prevState.currentTimer - 1,
-      }));
-    }, oneSeconds);
-  }
-
-  hashEmail = () => {
+  playerGravatar = () => {
     const { getEmail } = this.props;
-    const emailConvertido = md5(getEmail).toString();
-    const gravatar = `https://www.gravatar.com/avatar/${emailConvertido}`;
+    const convertedEmail = md5(getEmail).toString();
+    const gravatar = `https://www.gravatar.com/avatar/${convertedEmail}`;
     return gravatar;
   };
 
-  fetchApiQuestions = async () => {
-    const token = localStorage.getItem('token');
-    const quantQuestoes = 5;
-    const questionsAPI = await fetch(
-      `https://opentdb.com/api.php?amount=${quantQuestoes}&token=${token}`,
-    );
-    const questionsObj = await questionsAPI.json();
-    return this.setResponseApiState(questionsObj);
-  };
-
+  // não entendi direito essa função. Serve para validar o token, certo?
   setResponseApiState = (param) => {
     const randNumber = 0.5;
     const RESPONSE_CODE = 3;
@@ -68,124 +50,150 @@ class Game extends React.Component {
       history.push('/');
     } else {
       this.setState({
-        questionIndex: 0,
+        currentQuestion: 0,
         allQuestions: param.results,
         category: param.results[0].category,
         question: param.results[0].question,
         correctAnswer: param.results[0].correct_answer,
         difficulty: param.results[0].difficulty,
-        allAnswer: param.results[0]
+        allAnswers: param.results[0]
           .incorrect_answers.concat(param.results[0].correct_answer)
           .sort(() => Math.random() - randNumber),
       });
     }
   }
 
-  redirectPages = () => {
+  fetchQuestionsFromAPI = async () => {
+    const token = localStorage.getItem('token');
+    const numberOfQuestions = 5;
+    const questionsAPI = await fetch(
+      `https://opentdb.com/api.php?amount=${numberOfQuestions}&token=${token}`,
+    );
+    const questions = await questionsAPI.json();
+    return this.setResponseApiState(questions);
+  };
+
+  updateTimer = () => {
+    const oneSecond = 1000;
+    this.idTimer = setInterval(() => {
+      this.setState((prevState) => ({
+        timer: prevState.timer - 1,
+      }));
+    }, oneSecond);
+  }
+
+  resetTimer = () => {
+    clearInterval(this.idTimer);
+    this.setState({ timer: 30, isEnabled: true }); // INVERTER LÓGICA
+  };
+
+  showQuestions = (event) => {
+    const { correctAnswer, isBtnNextShowing } = this.state;
+    const { setQuestions, getAssertions } = this.props;
+    const { name } = event.target;
+    if (name === correctAnswer) {
+      this.playerScore();
+      this.resetTimer();
+      setQuestions(getAssertions);
+    } else if (name !== correctAnswer) {
+      this.resetTimer();
+    }
+    this.setState({
+      isBtnNextShowing: !isBtnNextShowing,
+    });
+  };
+
+  playerScore = () => {
+    const { setScore, getScore } = this.props;
+    const { timer, difficulty } = this.state;
+    const defaultPoints = 10;
+    const level = { easy: 1, medium: 2, hard: 3 };
+    const totalScore = getScore + (defaultPoints + (timer * level[difficulty]));
+    setScore(totalScore);
+  };
+
+  nextQuestion = (event) => {
+    const { currentQuestion, allQuestions } = this.state;
+    const next = currentQuestion + 1;
+    const lastQuestion = allQuestions.length === next;
+    this.showQuestions(event);
+    if (lastQuestion) {
+      this.goToFeedback();
+    } else {
+      this.setState({
+        currentQuestion: next,
+        category: allQuestions[next].category,
+        question: allQuestions[next].question,
+        correctAnswer: allQuestions[next].correct_answer,
+        difficulty: allQuestions[next].difficulty,
+        allAnswers: allQuestions[next].incorrect_answers.concat(
+          allQuestions[next].correct_answer,
+        ),
+        isEnabled: false,
+      });
+      this.updateTimer();
+    }
+  };
+
+  goToFeedback = () => {
     const { history } = this.props;
     history.push('/feedback');
   };
 
-  clearCount = () => {
-    clearInterval(this.idTimer);
-    this.setState({ currentTimer: 30, isChecked: true });
-  };
-
-  waitQuestion = (event) => {
-    const { correctAnswer, showButton } = this.state;
-    const { setQuestions, getAssertions } = this.props;
-    const { name } = event.target;
-    if (name === correctAnswer) {
-      this.scorePlayer();
-      this.clearCount();
-      setQuestions(getAssertions);
-    } else if (name !== correctAnswer) {
-      this.clearCount();
-    }
-    this.setState({
-      showButton: !showButton,
-    });
-  };
-
-  questionNext = (event) => {
-    const { questionIndex, allQuestions } = this.state;
-    const nextIndex = questionIndex + 1;
-    const lastElement = allQuestions.length === nextIndex;
-    this.waitQuestion(event);
-    if (lastElement) {
-      this.redirectPages();
-    } else {
-      this.setState({
-        questionIndex: nextIndex,
-        category: allQuestions[nextIndex].category,
-        question: allQuestions[nextIndex].question,
-        correctAnswer: allQuestions[nextIndex].correct_answer,
-        difficulty: allQuestions[nextIndex].difficulty,
-        allAnswer: allQuestions[nextIndex].incorrect_answers.concat(
-          allQuestions[nextIndex].correct_answer,
-        ),
-        isChecked: false,
-      });
-      this.updateCurrentTimer();
-    }
-  };
-
-  scorePlayer = () => {
-    const { setScore, getScore } = this.props;
-    const { currentTimer, difficulty } = this.state;
-    const defaultNumber = 10;
-    const pontuation = { easy: 1, medium: 2, hard: 3 };
-    const sum = getScore + (defaultNumber + (currentTimer * pontuation[difficulty]));
-    setScore(sum);
-  };
-
-  disableElement = () => {
-    this.setState({
-      showButton: false,
-    });
-  }
+  // disableElement = () => {
+  //   this.setState({
+  //     isBtnNextShowing: false,
+  //   });
+  // }
 
   render() {
     const { getName, getScore } = this.props;
     const {
+      timer,
       category,
       question,
       correctAnswer,
-      allAnswer,
-      isChecked,
-      currentTimer,
-      showButton,
+      allAnswers,
+      isEnabled,
+      isBtnNextShowing,
     } = this.state;
+
     return (
-      <>
-        <header>
+      <div className="trivia-container">
+        <header className="player-header">
           <img
             data-testid="header-profile-picture"
-            src={ this.hashEmail() }
+            className="profile-picture"
+            src={ this.playerGravatar() }
             alt={ getName }
           />
           <p data-testid="header-player-name">{getName}</p>
-          <p data-testid="header-score">{getScore}</p>
+          <p data-testid="header-score">
+            Pontos:
+            {' '}
+            {getScore}
+          </p>
         </header>
         <div>
           <Question
             category={ category }
             question={ question }
             correctAnswer={ correctAnswer }
-            allAnswer={ allAnswer }
-            questionNext={ this.questionNext }
-            isChecked={ isChecked }
-            waitQuestion={ this.waitQuestion }
-            ableEl={ this.ableElement }
+            allAnswers={ allAnswers }
+            nextQuestion={ this.nextQuestion }
+            isEnabled={ isEnabled }
+            showQuestions={ this.showQuestions }
+            // ableEl={ this.ableElement }
           />
-          {showButton && <ButtonNext funcQuest={ this.questionNext } />}
+          {isBtnNextShowing
+            && <ButtonNext nextQuestion={ this.nextQuestion } className="button-next" />}
         </div>
-        <h3>
+        <h4>
           Seu tempo para responder a pergunta acaba em:
           {' '}
-          {currentTimer}
-        </h3>
-      </>
+          {timer}
+        </h4>
+      </div>
     );
   }
 }
@@ -210,7 +218,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setScore: (sum) => dispatch(sendScore(sum)),
+  setScore: (totalScore) => dispatch(sendScore(totalScore)),
   setQuestions: (questions) => dispatch(sendQuestions(questions)),
 });
 
