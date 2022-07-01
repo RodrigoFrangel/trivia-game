@@ -4,31 +4,30 @@ import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 
 class Feedback extends Component {
-    state = {
-      mensagem: '',
-      checkedMensage: false,
-    };
+  // state = {
+  //   mensagem: '',
+  // };
 
-    componentDidMount() {
-      this.funcTest();
-    }
+  // componentDidMount() {
+  //   this.verifyMensage();
+  // }
 
-    funcTest = () => {
-      const { getAssertions } = this.props;
-      console.log(typeof getAssertions);
-      const assertionsParam = 3;
-      if (getAssertions < assertionsParam) {
-        this.setState({
-          mensagem: 'Could be better...',
-          checkedMensage: true,
-        });
-      } else {
-        this.setState = ({
-          mensagem: 'Well Done!',
-          checkedMensage: true,
-        });
-      }
-    }
+  // verifyMensage = () => {
+  //   const { getAssertions } = this.props;
+  //   console.log(getAssertions);
+  //   const assertionsParam = 3;
+  //   if (getAssertions < assertionsParam) {
+  //     console.log('aqui if');
+  //     this.setState({
+  //       mensagem: 'Could be better...',
+  //     });
+  //   } else {
+  //     console.log('aqui else');
+  //     this.setState = ({
+  //       mensagem: 'Well Done!',
+  //     });
+  //   }
+  // }
 
     hashEmail = () => {
       const { getEmail } = this.props;
@@ -38,8 +37,9 @@ class Feedback extends Component {
     };
 
     render() {
-      const { getName, getScore } = this.props;
-      const { checkedMensage, mensagem } = this.state;
+      const { getName, getScore, getAssertions } = this.props;
+      // const { mensagem } = this.state;
+      const assertionsParam = 3;
       return (
 
         <header>
@@ -52,9 +52,9 @@ class Feedback extends Component {
             { getName }
           </div>
           <div data-testid="header-score">{getScore}</div>
-          <p data-testid="feedback-text">
-            { checkedMensage && mensagem }
-          </p>
+          {getAssertions < assertionsParam
+            ? <p data-testid="feedback-text">Could be better...</p>
+            : <p data-testid="feedback-text">Well Done!</p>}
         </header>
 
       );
