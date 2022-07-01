@@ -19,7 +19,6 @@ describe('Página de Feedback', () => {
     const playAgainBtn = screen.getByText(/Play Again/i);
     
     expect(playerName).toBeInTheDocument();
-
     expect(playAgainBtn).toBeInTheDocument();
     userEvent.click(playAgainBtn);
     expect(history.location.pathname).toBe('/');
@@ -32,7 +31,6 @@ describe('Página de Feedback', () => {
     const rankingBtn = screen.getByText(/Ranking/i);
     
     expect(playerName).toBeInTheDocument();
-
     expect(rankingBtn).toBeInTheDocument();
     userEvent.click(rankingBtn);
     expect(history.location.pathname).toBe('/ranking');

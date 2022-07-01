@@ -16,7 +16,7 @@ class Game extends React.Component {
     difficulty: '',
     allQuestions: [],
     allAnswers: [],
-    isEnabled: false,
+    isEnabled: true,
     isBtnNextShowing: false,
   };
 
@@ -84,7 +84,7 @@ class Game extends React.Component {
 
   resetTimer = () => {
     clearInterval(this.idTimer);
-    this.setState({ timer: 30, isEnabled: true }); // INVERTER LÓGICA
+    this.setState({ timer: 30, isEnabled: false });
   };
 
   showQuestions = (event) => {
@@ -129,7 +129,7 @@ class Game extends React.Component {
         allAnswers: allQuestions[next].incorrect_answers.concat(
           allQuestions[next].correct_answer,
         ),
-        isEnabled: false,
+        isEnabled: true,
       });
       this.updateTimer();
     }
@@ -181,7 +181,7 @@ class Game extends React.Component {
             correctAnswer={ correctAnswer }
             allAnswers={ allAnswers }
             nextQuestion={ this.nextQuestion }
-            isEnabled={ isEnabled }
+            isEnabled={ !isEnabled }
             showQuestions={ this.showQuestions }
             // ableEl={ this.ableElement }
           />
