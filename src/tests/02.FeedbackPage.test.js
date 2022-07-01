@@ -1,10 +1,10 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import renderWithRouterAndRedux from '../tests/helpers/renderWithRouterAndRedux';
-import Feedback from '../pages/FeedBack';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
+import Feedback from '../pages/Feedback';
 
-describe('Testa página de Feedback', () => {
+describe('Página de Feedback', () => {
   const INITIAL_STATE = {
     player: {
       name: 'João Sem-braço',
@@ -12,26 +12,26 @@ describe('Testa página de Feedback', () => {
     },
   }
 
-  it('Verifica se a aplicação é redirecionada à página de Login ao clicar em Play Again', () => {
+  it('deve ser redirecionada à página de Login ao clicar em Play Again', () => {
     const { history } = renderWithRouterAndRedux(<Feedback />, INITIAL_STATE, '/');
 
-    const pName = screen.getByText(/João Sem-braço/i);
+    const playerName = screen.getByText(/João Sem-braço/i);
     const playAgainBtn = screen.getByText(/Play Again/i);
     
-    expect(pName).toBeInTheDocument();
+    expect(playerName).toBeInTheDocument();
 
     expect(playAgainBtn).toBeInTheDocument();
     userEvent.click(playAgainBtn);
     expect(history.location.pathname).toBe('/');
   });
 
-  it('Verifica se a aplicação é redirecionada à página de Ranking ao clicar em Ranking', () => {
+  it('deve redirecionada à página de Ranking ao clicar em Ranking', () => {
     const { history } = renderWithRouterAndRedux(<Feedback />, INITIAL_STATE, '/');
 
-    const pName = screen.getByText(/João Sem-braço/i);
+    const playerName = screen.getByText(/João Sem-braço/i);
     const rankingBtn = screen.getByText(/Ranking/i);
     
-    expect(pName).toBeInTheDocument();
+    expect(playerName).toBeInTheDocument();
 
     expect(rankingBtn).toBeInTheDocument();
     userEvent.click(rankingBtn);

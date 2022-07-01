@@ -4,62 +4,73 @@ import PropTypes from 'prop-types';
 class Question extends React.Component {
   render() {
     const {
+      showQuestions,
       question,
-      allAnswer,
       category,
-      // questionNext,
       correctAnswer,
-      isChecked,
-      waitQuestion,
+      allAnswers,
+      isEnabled,
     } = this.props;
+
     return (
-      <>
-        <p data-testid="question-category">{category}</p>
-        <p data-testid="question-text">{question}</p>
-        <div data-testid="answer-options">
-          {allAnswer.map((answear, index) => (
-            answear !== correctAnswer
+      <div className="trivia-question">
+        <div className="question-container">
+          <p
+            data-testid="question-category"
+            className="question-category"
+          >
+            {category}
+          </p>
+          <p
+            data-testid="question-text"
+            className="question-text"
+          >
+            {question}
+          </p>
+        </div>
+        <div data-testid="answer-options" className="answer-container">
+          {allAnswers.map((answer, index) => (
+            answer !== correctAnswer
               ? (
                 <button
-                  className={ isChecked ? 'wrong-answer' : '' }
-                  key={ answear }
+                  className={ isEnabled ? 'wrong-answer' : '' }
+                  key={ answer }
                   type="button"
                   name="wrong"
-                  onClick={ waitQuestion }
+                  onClick={ showQuestions }
                   data-testid={ `wrong-answer-${index}` }
-                  disabled={ isChecked }
+                  disabled={ isEnabled }
                 >
-                  {answear}
+                  {answer}
                 </button>
               )
               : (
                 <button
-                  className={ isChecked ? 'correct-answer' : '' }
+                  className={ isEnabled ? 'correct-answer' : '' }
                   name={ correctAnswer }
-                  key={ answear }
+                  key={ answer }
                   type="button"
-                  onClick={ waitQuestion }
+                  onClick={ showQuestions }
                   data-testid="correct-answer"
-                  disabled={ isChecked }
+                  disabled={ isEnabled }
                 >
-                  {answear}
+                  {answer}
                 </button>
               )
           ))}
         </div>
-      </>
+      </div>
     );
   }
 }
 
 Question.propTypes = {
+  showQuestions: PropTypes.func.isRequired,
   question: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   correctAnswer: PropTypes.string.isRequired,
-  allAnswer: PropTypes.instanceOf(Array).isRequired,
-  // questionNext: PropTypes.func.isRequired,
-  waitQuestion: PropTypes.func.isRequired,
-  isChecked: PropTypes.bool.isRequired,
+  allAnswers: PropTypes.instanceOf(Array).isRequired,
+  isEnabled: PropTypes.bool.isRequired,
 };
 
 export default Question;
