@@ -1,7 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import md5 from 'crypto-js/md5';
 
 class Ranking extends React.Component {
+  state = {
+    gravatarUrl: '',
+  }
+
+  playerGravatar = () => {
+    const { getEmail } = this.props;
+    const convertedEmail = md5(getEmail).toString();
+    const gravatar = `https://www.gravatar.com/avatar/${convertedEmail}`;
+    this.setState({ gravatarUrl: gravatar });
+  }
+
   goToLogin = () => {
     const { history } = this.props;
     history.push('/');
@@ -20,6 +33,7 @@ class Ranking extends React.Component {
   }
 
   render() {
+    const { gravatarUrl } = this.state;
     return (
       <div className="ranking-container">
         <h1 data-testid="ranking-title">Ranking</h1>
@@ -28,7 +42,7 @@ class Ranking extends React.Component {
             key={ player.name }
             className="player-ranking"
           >
-            <img scr={ player.gravatar } alt={ player.name } />
+            <img scr={ gravatarUrl } alt={ player.name } />
             <span data-testid={ `player-name-${index}` }>{ player.name }</span>
             <span data-testid={ `player-score-${index}` }>
               Score:
@@ -54,6 +68,11 @@ Ranking.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  getEmail: PropTypes.string.isRequired,
 };
 
-export default Ranking;
+const mapStateToProps = (state) => ({
+  getEmail: state.player.gravatarEmail,
+});
+
+export default connect(mapStateToProps)(Ranking);

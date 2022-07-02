@@ -57,14 +57,6 @@ body {
   pointer-events: none;
 }
 
-/* .red-border {
-  border: 1px solid red;
-}
-
-.green-border {
-  border: 1px solid green;
-} */
-
 .login-container {
   display: flex;
   flex-direction: column;
@@ -88,6 +80,7 @@ body {
 .login-button {
   border-radius: 5px;
   box-sizing: border-box;
+  cursor: pointer;
   font-family: Varela Round , sans-serif;
   font-size: 20px;
   font-weight: 700;
@@ -153,6 +146,7 @@ body {
 .trivia-question button {
   border-radius: 8px;
   color: black;
+  cursor: pointer;
   font-family: Varela Round , sans-serif;
   font-size: 15px;
   font-weight: 700;
@@ -182,6 +176,7 @@ body {
 
 .button-next {
   border-radius: 5px;
+  cursor: pointer;
   font-family: Varela Round , sans-serif;
   font-size: 15px;
   font-weight: 700;
@@ -200,6 +195,7 @@ body {
 .feedback-page button {
   border-radius: 8px;
   color: black;
+  cursor: pointer;
   font-family: Varela Round , sans-serif;
   font-size: 15px;
   font-weight: 700;
@@ -218,6 +214,7 @@ body {
 .ranking-container button {
   border-radius: 8px;
   color: black;
+  cursor: pointer;
   font-family: Varela Round , sans-serif;
   font-size: 15px;
   font-weight: 700;
