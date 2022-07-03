@@ -35,9 +35,7 @@ class Feedback extends Component {
 
   saveDataLocalStorage = () => {
     const { getName, getScore } = this.props;
-    const { gravatarUrl } = this.state;
     const newObj = {
-      gravatar: gravatarUrl,
       name: getName,
       score: getScore,
     };

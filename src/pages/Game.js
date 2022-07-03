@@ -42,8 +42,8 @@ class Game extends React.Component {
 
   // não entendi direito essa função. Serve para validar o token, certo?
   setResponseApiState = (param) => {
-    const randNumber = 0.5;
     const RESPONSE_CODE = 3;
+    const randNumber = 0.5;
     const { history } = this.props;
     if (param.results.length === 0 || param.response_code === RESPONSE_CODE) {
       localStorage.setItem('token', '');
@@ -114,6 +114,7 @@ class Game extends React.Component {
 
   nextQuestion = (event) => {
     const { currentQuestion, allQuestions } = this.state;
+    const randNumber = 0.5;
     const next = currentQuestion + 1;
     const lastQuestion = allQuestions.length === next;
     this.showQuestions(event);
@@ -128,7 +129,7 @@ class Game extends React.Component {
         difficulty: allQuestions[next].difficulty,
         allAnswers: allQuestions[next].incorrect_answers.concat(
           allQuestions[next].correct_answer,
-        ),
+        ).sort(() => Math.random() - randNumber),
         isEnabled: true,
       });
       this.updateTimer();
@@ -139,12 +140,6 @@ class Game extends React.Component {
     const { history } = this.props;
     history.push('/feedback');
   };
-
-  // disableElement = () => {
-  //   this.setState({
-  //     isBtnNextShowing: false,
-  //   });
-  // }
 
   render() {
     const { getName, getScore } = this.props;
@@ -183,7 +178,6 @@ class Game extends React.Component {
             nextQuestion={ this.nextQuestion }
             isEnabled={ !isEnabled }
             showQuestions={ this.showQuestions }
-            // ableEl={ this.ableElement }
           />
           {isBtnNextShowing
             && <ButtonNext nextQuestion={ this.nextQuestion } className="button-next" />}
