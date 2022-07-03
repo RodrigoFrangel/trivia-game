@@ -30,7 +30,12 @@ class Game extends React.Component {
     const { timer } = this.state;
     if (timer === timesUp) {
       this.resetTimer();
+      this.activeBtnTimerZero();
     }
+  }
+
+  activeBtnTimerZero = () => {
+    this.setState({ isBtnNextShowing: true });
   }
 
   playerGravatar = () => {
