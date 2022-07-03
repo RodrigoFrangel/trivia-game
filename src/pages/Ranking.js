@@ -8,6 +8,10 @@ class Ranking extends React.Component {
     gravatarUrl: '',
   }
 
+  componentDidMount = () => {
+    this.playerGravatar();
+  };
+
   playerGravatar = () => {
     const { getEmail } = this.props;
     const convertedEmail = md5(getEmail).toString();
@@ -42,7 +46,7 @@ class Ranking extends React.Component {
             key={ player.name }
             className="player-ranking"
           >
-            <img scr={ gravatarUrl } alt={ player.name } />
+            <img src={ gravatarUrl } alt={ player.name } />
             <span data-testid={ `player-name-${index}` }>{ player.name }</span>
             <span data-testid={ `player-score-${index}` }>
               Score:
