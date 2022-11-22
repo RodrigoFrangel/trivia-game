@@ -18,7 +18,7 @@ class Feedback extends Component {
     const convertedEmail = md5(getEmail).toString();
     const gravatar = `https://www.gravatar.com/avatar/${convertedEmail}`;
     this.setState({ gravatarUrl: gravatar },
-      () => this.saveDataLocalStorage());
+      () => this.saveDataOnLocalStorage());
   }
 
   goToLogin = () => {
@@ -33,18 +33,18 @@ class Feedback extends Component {
     history.push('/ranking');
   };
 
-  saveDataLocalStorage = () => {
+  saveDataOnLocalStorage = () => {
     const { getName, getScore } = this.props;
-    const newObj = {
+    const leaderboard = {
       name: getName,
       score: getScore,
     };
-    const playersLS = JSON.parse(localStorage.getItem('players'));
-    if (playersLS) {
-      playersLS.push(newObj);
-      localStorage.setItem('players', JSON.stringify(playersLS));
+    const allPlayers = JSON.parse(localStorage.getItem('players'));
+    if (allPlayers) {
+      allPlayers.push(leaderboard);
+      localStorage.setItem('players', JSON.stringify(allPlayers));
     } else {
-      localStorage.setItem('players', JSON.stringify([newObj]));
+      localStorage.setItem('players', JSON.stringify([leaderboard]));
     }
   };
 
@@ -65,28 +65,42 @@ class Feedback extends Component {
           <div data-testid="header-player-name">
             { getName }
           </div>
-          <div data-testid="header-score">{getScore}</div>
+          <div data-testid="header-score">
+            Score:
+            {' '}
+            {getScore}
+          </div>
         </header>
-        <div>
-          <p data-testid="feedback-total-question">{getAssertions}</p>
-          <p data-testid="feedback-total-score">{getScore}</p>
+        <div className="feedback-container">
+          <p data-testid="feedback-total-question">
+            Correct answers:
+            {' '}
+            {getAssertions}
+          </p>
+          <p data-testid="feedback-total-score">
+            Final score:
+            {' '}
+            {getScore}
+          </p>
           {getAssertions < assertionsParam
             ? <p data-testid="feedback-text">Could be better...</p>
             : <p data-testid="feedback-text">Well Done!</p>}
-          <button
-            onClick={ this.goToLogin }
-            data-testid="btn-play-again"
-            type="button"
-          >
-            Play Again
-          </button>
-          <button
-            onClick={ this.goToRanking }
-            data-testid="btn-ranking"
-            type="button"
-          >
-            Ranking
-          </button>
+          <div className="feedback-buttons">
+            <button
+              onClick={ this.goToLogin }
+              data-testid="btn-play-again"
+              type="button"
+            >
+              Play Again
+            </button>
+            <button
+              onClick={ this.goToRanking }
+              data-testid="btn-ranking"
+              type="button"
+            >
+              Ranking
+            </button>
+          </div>
         </div>
       </div>
     );
