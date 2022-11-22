@@ -1,13 +1,14 @@
-@media ( prefers-reduced-motion : no-preference ) {
-
-  .App-logo {
-    animation: shake infinite 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  }
+body {
+  box-sizing: border-box;
+  font-family: Varela Round, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 .App-header {
   align-items: center;
-  background-color: #282c34;
+  background-color: #1c191a;
+  box-shadow: inset 0 0 300px black;
   color: white;
   display: flex;
   flex-direction: column;
@@ -16,52 +17,68 @@
   min-height: 100vh;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes shake {
-
-  10%, 90% {
-    transform: translate3d(-1px, 0, 0);
-  }
-
-  20%, 80% {
-    transform: translate3d(2px, 0, 0);
-  }
-
-  30%, 50%, 70% {
-    transform: translate3d(-4px, 0, 0);
-  }
-
-  40%, 60% {
-    transform: translate3d(4px, 0, 0);
-  }
-}
-
-body {
-  box-sizing: border-box;
-
-  /* font-family: Indie Flower , cursive; */
-  font-family: Varela Round , sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
 .App {
   text-align: center;
 }
 
 .App-logo {
-  height: 15vmin;
-  pointer-events: none;
+  animation: pump 1s infinite;
+  pointer-events: stroke;
+  width: 30%;
 }
 
+@keyframes pump {
+  0% {
+    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0.4));
+  }
+
+  70% {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0));
+  }
+
+  100% {
+    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+  }
+}
+
+.pattern-circle-bottom {
+  animation: spin 60s linear infinite;
+  bottom: -400px;
+  left: -220px;
+  position: fixed;
+  width: 53%;
+  z-index: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(360deg);
+  }
+}
+
+.pattern-circle-top {
+  animation: spin 60s linear infinite;
+  position: fixed;
+  right: -420px;
+  top: -500px;
+  width: 53%;
+  z-index: 0;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ------- LOGIN PAGE STYLE ------- */
 .login-container {
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
   padding: 20px;
   width: 30%;
+  z-index: 1;
 }
 
 .input-title {
@@ -70,60 +87,160 @@ body {
 }
 
 .login-input {
+  background-color: #fa4747;
   border-radius: 5px;
   box-sizing: border-box;
+  color: #f6e7d8;
   margin-bottom: 10px;
   padding: 15px;
   width: 100%;
 }
 
+.login-input::placeholder {
+  color: #f6e7d8bb;
+}
+
+.login-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 7px;
+}
+
 .login-button {
-  border-radius: 5px;
+  background-color: #f6e7d8;
+  border: none;
+  border-radius: 50px;
   box-sizing: border-box;
+  color: #fa4747;
   cursor: pointer;
-  font-family: Varela Round , sans-serif;
+  font-family: Varela Round, sans-serif;
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 10px;
   padding: 15px;
-  width: 100%;
+  width: 48%;
+}
+
+.login-button:disabled {
+  background-color: rgba(252, 176, 176, 0.644);
+  color: #f14a029f;
+}
+
+.login-button:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.705);
+  transform: translateY(-3px);
+}
+
+.login-button:active {
+  transform: translateY(-1px);
+  transition: 100ms;
+}
+
+/* ------- GAME PAGE STYLE ------- */
+.trivia-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  width: 50%;
+  z-index: 1;
+  /* border: red solid; */
+}
+
+.trivia-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.timer {
+  animation: pulse 1s infinite;
+  border: white solid;
+  border-radius: 50%;
+  margin: 15px;
+  padding: 13px;
+  text-align: center;
+  width: 30px;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+.button-next {
+  border-radius: 50%;
+  background-color: #f6e7d8;
+  border: none;
+  color: #fa4747;
+  cursor: pointer;
+  font-family: Varela Round, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 12px;
+  text-align: center;
+  width: 68px;
+  height: 65px;
+}
+
+.button-next:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.705);
+  transform: translateY(-3px);
+}
+
+.button-next:active {
+  transform: translateY(-1px);
+  transition: 100ms;
 }
 
 .player-header {
   align-items: center;
-  background-color: rgb(47, 80, 168);
+  background-color: #ffe865;
   border-radius: 5px;
   box-sizing: border-box;
+  color: #1c191a;
   display: flex;
+  font-weight: 700;
   height: 50px;
   justify-content: space-between;
   margin-bottom: 5px;
   padding: 0 10px 0 0;
   width: 100%;
+  z-index: 1;
 }
-
-.trivia-container {
-  padding: 10px;
-  width: 40%;
-}
-
 .profile-picture {
   border-radius: 5px;
   height: 50px;
   width: 50px;
 }
 
-.question-category {
-  background-color: rgb(207, 207, 207);
-  border-radius: 3px 3px 0 0;
-  color: black;
-  margin: 0;
-  padding: 10px;
-}
-
 .trivia-question {
+  box-sizing: border-box;
   display: flex;
   width: 100%;
+}
+
+.question-container {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.question-category {
+  background-color: #fa4747;
+  border-radius: 3px 3px 0 0;
+  color: white;
+  font-weight: 700;
+  margin: 0;
+  padding: 10px;
 }
 
 .question-text {
@@ -136,31 +253,23 @@ body {
 }
 
 .answer-container {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-left: 8px;
-  width: 100%;
+  width: 300px;
 }
 
 .trivia-question button {
+  border: none;
   border-radius: 8px;
   color: black;
   cursor: pointer;
-  font-family: Varela Round , sans-serif;
+  font-family: Varela Round, sans-serif;
   font-size: 15px;
   font-weight: 700;
   margin: 0 0 7px;
-  padding: 7px;
-}
-
-.correct-answer, .wrong-answer {
-  background-color: rgb(83, 207, 0);
-  border-radius: 8px;
-  color: black;
-  font-family: Varela Round , sans-serif;
-  font-size: 15px;
-  font-weight: 700;
   padding: 7px;
 }
 
@@ -174,62 +283,96 @@ body {
   border: 3px solid red;
 }
 
-.button-next {
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: Varela Round , sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  margin-top: 10px;
-  padding: 10px;
-  width: 200px;
-}
-
+/* ------- FEEDBACK PAGE STYLE ------- */
 .feedback-page {
   background-color: #181a1f5e;
   border-radius: 5px;
   margin: 30px;
   width: 40%;
+  z-index: 1;
 }
 
 .feedback-page button {
-  border-radius: 8px;
-  color: black;
+  background-color: #f6e7d8;
+  border: none;
+  border-radius: 50px;
+  box-sizing: border-box;
+  color: #fa4747;
   cursor: pointer;
-  font-family: Varela Round , sans-serif;
-  font-size: 15px;
+  font-family: Varela Round, sans-serif;
+  font-size: 20px;
   font-weight: 700;
-  margin: 7px;
-  padding: 7px;
-  width: 40%;
+  margin-bottom: 10px;
+  padding: 15px;
+  width: 48%;
 }
 
+.feedback-page button:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.705);
+  transform: translateY(-3px);
+}
+
+.feedback-page button:active {
+  transform: translateY(-1px);
+  transition: 100ms;
+}
+
+.feedback-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ------- RANKING PAGE STYLE ------- */
 .ranking-container {
   align-items: center;
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
   width: 60%;
+  z-index: 1;
 }
 
-.ranking-container button {
-  border-radius: 8px;
-  color: black;
-  cursor: pointer;
-  font-family: Varela Round , sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  margin: 7px;
-  padding: 7px;
-  width: 40%;
+.ranking-title {
+  font-family: Fredoka One, cursive;
+  font-weight: 100;
+  margin: 20px;
 }
 
 .player-ranking {
-  background-color: #181a1f5e;
-  border-radius: 8px;
+  align-items: center;
+  background-color: #ffe865;
+  border-radius: 50px;
+  color: #1c191a;
   display: flex;
-  flex-direction: column;
+  font-weight: 700;
+  justify-content: space-between;
   line-height: 35px;
   margin: 7px;
-  padding: 7px;
-  width: 40%;
+  padding: 7px 10px 7px 7px;
+  width: 50%;
+}
+
+.player-ranking:hover {
+  transform: scale(1.06);
+  transition: 200ms;
+}
+
+.ranking-container img {
+  border-radius: 50%;
+  width: 15%;
+}
+
+.ranking-container button {
+  background-color: #f6e7d8;
+  border: none;
+  border-radius: 50px;
+  box-sizing: border-box;
+  color: #fa4747;
+  cursor: pointer;
+  font-family: Varela Round, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 10px;
+  padding: 15px;
+  width: 48%;
 }

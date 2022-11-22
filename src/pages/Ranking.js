@@ -40,7 +40,7 @@ class Ranking extends React.Component {
     const { gravatarUrl } = this.state;
     return (
       <div className="ranking-container">
-        <h1 data-testid="ranking-title">Ranking</h1>
+        <h1 data-testid="ranking-title" className="ranking-title">Ranking</h1>
         {this.getPlayerScores().map((player, index) => (
           <div
             key={ player.name }
