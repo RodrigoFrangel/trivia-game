@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import logo from './trivia.png';
+import logo from './assets/trivia-logo.png';
+import pattern from './assets/geometric-lines.png';
 import './App.css';
 import Login from './pages/Login';
 import Settings from './pages/Settings';
@@ -13,6 +14,8 @@ export default function App() {
     <div className="App">
       <header className="App-header">
         <img src={ logo } className="App-logo" alt="logo" />
+        <img src={ pattern } className="pattern-circle-bottom" alt="pattern-circle" />
+        <img src={ pattern } className="pattern-circle-top" alt="pattern-circle" />
         <Switch>
           <Route exact path="/" component={ Login } />
           <Route exact path="/settings" component={ Settings } />
