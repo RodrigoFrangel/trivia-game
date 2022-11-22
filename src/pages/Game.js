@@ -18,24 +18,22 @@ class Game extends React.Component {
     allAnswers: [],
     isEnabled: true,
     isBtnNextShowing: false,
+    isTimerShowing: false,
   };
 
   componentDidMount = async () => {
-    this.updateTimer();
+    this.timerCountdown();
     await this.fetchQuestionsFromAPI();
+    this.setState({ isTimerShowing: true });
   }
 
   componentDidUpdate = async () => {
-    const timesUp = 0;
     const { timer } = this.state;
+    const timesUp = 0;
     if (timer === timesUp) {
       this.resetTimer();
-      this.activeBtnTimerZero();
+      this.showBtnNext();
     }
-  }
-
-  activeBtnTimerZero = () => {
-    this.setState({ isBtnNextShowing: true });
   }
 
   playerGravatar = () => {
@@ -45,25 +43,24 @@ class Game extends React.Component {
     return gravatar;
   };
 
-  // não entendi direito essa função. Serve para validar o token, certo?
-  setResponseApiState = (param) => {
+  setResponseApiState = (question) => {
     const RESPONSE_CODE = 3;
-    const randNumber = 0.5;
+    const randomNum = 0.5;
     const { history } = this.props;
-    if (param.results.length === 0 || param.response_code === RESPONSE_CODE) {
+    if (question.results.length === 0 || question.response_code === RESPONSE_CODE) {
       localStorage.setItem('token', '');
       history.push('/');
     } else {
       this.setState({
         currentQuestion: 0,
-        allQuestions: param.results,
-        category: param.results[0].category,
-        question: param.results[0].question,
-        correctAnswer: param.results[0].correct_answer,
-        difficulty: param.results[0].difficulty,
-        allAnswers: param.results[0]
-          .incorrect_answers.concat(param.results[0].correct_answer)
-          .sort(() => Math.random() - randNumber),
+        allQuestions: question.results,
+        category: question.results[0].category,
+        question: question.results[0].question,
+        correctAnswer: question.results[0].correct_answer,
+        difficulty: question.results[0].difficulty,
+        allAnswers: question.results[0]
+          .incorrect_answers.concat(question.results[0].correct_answer)
+          .sort(() => Math.random() - randomNum),
       });
     }
   }
@@ -78,19 +75,30 @@ class Game extends React.Component {
     return this.setResponseApiState(questions);
   };
 
-  updateTimer = () => {
-    const oneSecond = 1000;
+  timerCountdown = () => {
+    const ONE_SECOND = 1000;
     this.idTimer = setInterval(() => {
       this.setState((prevState) => ({
         timer: prevState.timer - 1,
       }));
-    }, oneSecond);
+    }, ONE_SECOND);
   }
 
   resetTimer = () => {
     clearInterval(this.idTimer);
-    this.setState({ timer: 30, isEnabled: false });
+    this.setState({
+      timer: 30,
+      isEnabled: false,
+      isTimerShowing: true,
+    });
   };
+
+  showBtnNext = () => {
+    this.setState({
+      isBtnNextShowing: true,
+      isTimerShowing: false,
+    });
+  }
 
   showQuestions = (event) => {
     const { correctAnswer, isBtnNextShowing } = this.state;
@@ -119,7 +127,7 @@ class Game extends React.Component {
 
   nextQuestion = (event) => {
     const { currentQuestion, allQuestions } = this.state;
-    const randNumber = 0.5;
+    const randomNum = 0.5;
     const next = currentQuestion + 1;
     const lastQuestion = allQuestions.length === next;
     this.showQuestions(event);
@@ -134,10 +142,10 @@ class Game extends React.Component {
         difficulty: allQuestions[next].difficulty,
         allAnswers: allQuestions[next].incorrect_answers.concat(
           allQuestions[next].correct_answer,
-        ).sort(() => Math.random() - randNumber),
+        ).sort(() => Math.random() - randomNum),
         isEnabled: true,
       });
-      this.updateTimer();
+      this.timerCountdown();
     }
   };
 
@@ -156,10 +164,19 @@ class Game extends React.Component {
       allAnswers,
       isEnabled,
       isBtnNextShowing,
+      isTimerShowing,
     } = this.state;
 
     return (
       <div className="trivia-container">
+        <div className="trivia-header">
+          {isTimerShowing && <h4 className="timer">{timer}</h4>}
+          {isBtnNextShowing
+            && <ButtonNext
+              nextQuestion={ this.nextQuestion }
+              className="button-next"
+            />}
+        </div>
         <header className="player-header">
           <img
             data-testid="header-profile-picture"
@@ -169,7 +186,7 @@ class Game extends React.Component {
           />
           <p data-testid="header-player-name">{getName}</p>
           <p data-testid="header-score">
-            Pontos:
+            Score:
             {' '}
             {getScore}
           </p>
@@ -184,14 +201,7 @@ class Game extends React.Component {
             isEnabled={ !isEnabled }
             showQuestions={ this.showQuestions }
           />
-          {isBtnNextShowing
-            && <ButtonNext nextQuestion={ this.nextQuestion } className="button-next" />}
         </div>
-        <h4>
-          Seu tempo para responder a pergunta acaba em:
-          {' '}
-          {timer}
-        </h4>
       </div>
     );
   }

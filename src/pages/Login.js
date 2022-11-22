@@ -49,43 +49,45 @@ class Login extends React.Component {
 
     return (
       <div className="login-container">
+        <h3 className="input-title">Name</h3>
+        <input
+          type="text"
+          data-testid="input-player-name"
+          className="login-input"
+          name="inputName"
+          placeholder="Choose your coolest name"
+          onChange={ this.handleChange }
+          value={ inputName }
+        />
         <h3 className="input-title">Email</h3>
         <input
           type="email"
           data-testid="input-gravatar-email"
           className="login-input"
           name="inputEmail"
-          placeholder="exemplo@hotmail.com"
+          placeholder="example@gmail.com"
           onChange={ this.handleChange }
           value={ inputEmail }
         />
-        <h3 className="input-title">Nome</h3>
-        <input
-          type="text"
-          data-testid="input-player-name"
-          className="login-input"
-          name="inputName"
-          placeholder="Digite seu nome"
-          onChange={ this.handleChange }
-          value={ inputName }
-        />
-        <button
-          type="button"
-          data-testid="btn-play"
-          className="login-button"
-          onClick={ this.startGame }
-          disabled={ !isEnabled }
-        >
-          Play
-        </button>
-        <button
-          type="button"
-          data-testid="btn-settings"
-          className="login-button"
-          onClick={ this.goToSettings }
-        >
-          Configurações
-        </button>
+        <div className="login-buttons">
+          <button
+            type="button"
+            data-testid="btn-play"
+            className="login-button"
+            onClick={ this.startGame }
+            disabled={ !isEnabled }
+          >
+            Play
+          </button>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            className="login-button"
+            onClick={ this.goToSettings }
+          >
+            Settings
+          </button>
+        </div>
       </div>
     );
   }
