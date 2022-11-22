@@ -8,10 +8,12 @@ import Settings from './pages/Settings';
 import Game from './pages/Game';
 import Feedback from './pages/Feedback';
 import Ranking from './pages/Ranking';
+import ThemeSong from './components/AudioPlayer';
 
 export default function App() {
   return (
     <div className="App">
+      <ThemeSong />
       <header className="App-header">
         <img src={ logo } className="App-logo" alt="logo" />
         <img src={ pattern } className="pattern-circle-bottom" alt="pattern-circle" />

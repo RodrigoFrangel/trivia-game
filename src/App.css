@@ -21,6 +21,29 @@ body {
   text-align: center;
 }
 
+.audioPlayer {
+  align-items: center;
+  display: flex;
+  margin: 30px 40px;
+  position: absolute;
+  width: fit-content;
+}
+
+.playPause {
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  font-size: 32px;
+  height: 75px;
+}
+
+.play {
+  position: relative;
+}
+
 .App-logo {
   animation: pump 1s infinite;
   pointer-events: stroke;
